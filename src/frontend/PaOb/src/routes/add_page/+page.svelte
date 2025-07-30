@@ -2,7 +2,7 @@
     let pageName = '';
     let pageUrl = '';
     let elementToMonitor = '';
-    let checkInterval = 60;
+    let checkInterval: string = "60";
 
     let message = '';
     let error = '';
@@ -11,7 +11,7 @@
         message = '';
         error = '';
 
-        if (!pageName || !pageUrl || checkInterval <= 0) {
+        if (!pageName || !pageUrl || Number(checkInterval) <= 0) {
             error = 'Please fill in all required fields';
             return;
         }
@@ -40,11 +40,11 @@
             pageName = '';
             pageUrl = '';
             elementToMonitor = '';
-            checkInterval = 60;
+            checkInterval = "60";
 
             setTimeout(() => {
                 window.location.href = '/';
-            }, 1000);
+            }, 100);
 
         } catch (err: any) {
             error = err.message || 'Unknown error';
@@ -129,17 +129,17 @@
         <input id="url" type="url" bind:value={pageUrl} />
 
         <label for="interval">Check Interval</label>
-        <select id="interval" value="300">
-            <option value="5">5 sec</option>
-            <option value="30">30 sec</option>
-            <option value="60">1 min</option>
-            <option value="300" selected>5 min</option>
-            <option value="900">15 min</option>
-            <option value="1800">30 min</option>
-            <option value="3600">1 hour</option>
-            <option value="18000">5 hours</option>
-            <option value="43200">12 hours</option>
-            <option value="86400">1 day</option>
+        <select id="interval" bind:value={checkInterval}>
+            <option value=5>5 sec</option>
+            <option value=30>30 sec</option>
+            <option value=60 selected>1 min</option>
+            <option value=300>5 min</option>
+            <option value=900>15 min</option>
+            <option value=1800>30 min</option>
+            <option value=3600>1 hour</option>
+            <option value=18000>5 hours</option>
+            <option value=43200>12 hours</option>
+            <option value=86400>1 day</option>
         </select>
 
     <div style="display: flex; justify-content: center; margin-top: 1.5rem;">

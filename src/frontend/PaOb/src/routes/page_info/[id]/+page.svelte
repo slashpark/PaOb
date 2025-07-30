@@ -58,6 +58,11 @@
             error = err.message;
         }
     }
+
+    // Manual check
+    async function manualCheck() {
+        //TODO: 
+    }
 </script>
 <section>
 {#if loading}
@@ -111,7 +116,7 @@
 
             <div class="border-t pt-4 text-sm text-gray-600">
                 <p><strong>Last update:</strong> {pageData.last_update ? new Date(pageData.last_update).toLocaleString() : 'N/A'}</p>
-                <p><strong>Last check:</strong> {pageData.last_check ? new Date(pageData.last_check).toLocaleString() : 'N/A'}</p>
+                <p><strong>Last check:</strong>  {pageData.last_check ? new Date(pageData.last_check).toLocaleString() : 'N/A'}</p>
                 <p>
                     <strong>Current status:</strong>
                     <span
@@ -133,16 +138,28 @@
                 </p>
             </div>
 
-            <div class="flex gap-4 mt-4">
-                <button type="submit" class="btn bg-blue-600 text-white">Save</button>
-                <button type="button" class="btn bg-red-600 text-white" on:click={deletePage}>Delete</button>
+            <div class="button_container">
+                <button type="submit">💾 Save</button>
+                <button type="button" style="background-color:#ef4444" on:click={deletePage}>🗑️ Delete</button>
+                <button type="button" style="background-color:#5cb705" on:click={manualCheck}>⟲ Manual Check</button>        
             </div>
+
+            {#if message}
+                <p class="text-green-500 mt-4">{message}</p>
+            {/if}
+
         </form>
     </div>
     {/if}
 </section>
 
 <style>
+    .button_container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+
     section {
 		display: flex;
 		flex-direction: column;
@@ -183,7 +200,7 @@
     }
 
     button {
-        margin-top: 1.5rem;
+        width: 30%;
         padding: 0.6rem 1.2rem;
         background-color: #007acc;
         color: white;
