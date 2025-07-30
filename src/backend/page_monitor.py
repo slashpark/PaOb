@@ -50,7 +50,7 @@ class PageMonitorService:
             body = soup.body
             page_content = body.get_text(separator="\n", strip=True) if body else ""
             hashed_content = sha256(page_content.encode()).hexdigest()
-            self.db_manager.add_page_to_monitor(name, url, element, interval, hashed_content)
+            page_id = self.db_manager.add_page_to_monitor(name, url, element, interval, hashed_content) #TODO: this should return the page_id in order to schedule the job
 
             self.scheduler.add_job(
                 self.submit_check_to_pool,
@@ -66,7 +66,7 @@ class PageMonitorService:
         pages = self.db_manager.get_all_pages_to_monitor()
 
         for page in pages:
-            interval_seconds = page['update_interval']
+            interval_seconds = page['check_interval']
             print(f"Scheduling task for ID {page['id']} every {interval_seconds} seconds.")
             self.scheduler.add_job(
                 self.submit_check_to_pool,
