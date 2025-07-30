@@ -25,7 +25,7 @@ class DatabaseManager:
                 last_check TIMESTAMP,
                 page_state TEXT,
                 last_content TEXT,
-                update_interval INTEGER NOT NULL
+                check_interval INTEGER NOT NULL
             );
         ''')
         conn.commit()
@@ -33,21 +33,24 @@ class DatabaseManager:
 
     def add_page_to_monitor(self, name, url, element, interval, hashed_content):
         conn = self.get_db_connection()
+        now = datetime.datetime.now()
         try:
-            conn.execute(
-                'INSERT INTO monitored_pages (page_name, page_url, start_monitoring, element_to_monitor, update_interval, last_content) VALUES (?,?,?,?,?,?)',
-                (name, url, datetime.datetime.now(), element, interval, hashed_content)
+            cursor = conn.execute(
+                'INSERT INTO monitored_pages (page_name, page_url, start_monitoring, element_to_monitor, last_update, last_check, page_state, check_interval, last_content) VALUES (?,?,?,?,?,?,?,?,?)',
+                (name, url, now, element, now, now, "ok", interval, hashed_content)
             )
             conn.commit()
+            return cursor.lastrowid
         except sqlite3.IntegrityError as e:
             print(f"Errore: " + str(e))
+            return None
         finally:
             conn.close()
 
     def update_page_status(self, id, new_state):
         conn = self.get_db_connection()
         conn.execute(
-            'UPDATE monitored_pages SET last_update =?, page_state =? WHERE id =?',
+            'UPDATE monitored_pages SET last_check =?, page_state =? WHERE id =?',
             (datetime.datetime.now(), new_state, id)
         )
         conn.commit()
@@ -89,7 +92,7 @@ class DatabaseManager:
     def update_page(self, id, name, url, interval):
         conn = self.get_db_connection()
         conn.execute(
-            'UPDATE monitored_pages SET page_name=?, page_url=?, update_interval=? WHERE id=?',
+            'UPDATE monitored_pages SET page_name=?, page_url=?, check_interval=? WHERE id=?',
             (name, url, interval, id)
         )
         conn.commit()
