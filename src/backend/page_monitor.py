@@ -4,14 +4,17 @@ from concurrent.futures import ThreadPoolExecutor
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from hashlib import sha256
-from db import DatabaseManager
 from bs4 import BeautifulSoup
+
+from db import DatabaseManager
+from notifier import Notifier
 
 class PageMonitorService:
     def __init__(self, max_workers=10):
         self.db_manager = DatabaseManager()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
         self.scheduler = BackgroundScheduler()
+        self.notifier = Notifier()
         self.scheduled_futures = {}
 
     def perform_check(self, page_id, url, element_to_monitor):
@@ -37,7 +40,7 @@ class PageMonitorService:
         if last_content != hashed_content:
             print(f"[{datetime.now()}] CONTENT CHANGED for ID {page_id}. Updating DB...")
             self.db_manager.update_page_content(page_id, hashed_content)
-            # TODO: send notification
+            self.notifier.send_notification(f"Content changed for page ID {page_id} at {url}")
         else:
             print(f"[{datetime.now()}] CONTENT UNCHANGED for ID {page_id}. No update needed.")
 
