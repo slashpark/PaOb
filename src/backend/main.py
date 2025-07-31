@@ -48,3 +48,10 @@ def update_page(page_id: int, page: Page):
     if not updated:
         raise HTTPException(status_code=404, detail="Page not found or update failed")
     return {"message": "Page updated successfully"}
+
+@app.get("/pages/{page_id}/next_check")
+def get_next_check(page_id: int):
+    next_check_time = monitor_service.get_next_check_time(page_id)
+    if not next_check_time:
+        raise HTTPException(status_code=404, detail="Page not found or no job scheduled")
+    return {"next_check": next_check_time.isoformat() if next_check_time else None}

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import PageCard from '$lib/components/PageCard.svelte';
-	import Button from '$lib/components/Button.svelte';
 	
 	let elements: any[] = [];
 	let loading = true;
@@ -34,7 +33,7 @@
 	<div class="section_header">
 		<h1>Monitored Pages</h1>
 		<a href="/add_page">
-			<Button text=" + Add new page" color="#3498db"></Button>
+			<button>+ Add new page</button>
 		</a>
 	</div>
 	{#if loading}
@@ -49,11 +48,7 @@
 				<PageCard 
 					page_id={element.id}
 					title={element.page_name} 
-					description={element.description} 
-					url={element.page_url} 
-					lastCheck={element.last_check} 
-					state={element.page_state}
-					checkInterval={element.check_interval}
+					url={element.page_url}
 					lastUpdate={element.last_update} 
 				/>
 			{/each}
@@ -63,14 +58,7 @@
 </section>
 
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
+	
 	.cards-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);

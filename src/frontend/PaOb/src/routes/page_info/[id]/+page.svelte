@@ -58,17 +58,28 @@
             error = err.message;
         }
     }
+
+    // Manual check
+    async function manualCheck() {
+        //TODO: 
+    }
 </script>
+
+<svelte:head>
+	<title>Page Info</title>
+	<meta name="description" content="PaOb" />
+</svelte:head>
+
 <section>
 {#if loading}
     <p>Loading...</p>
 {:else if error}
-    <p class="text-red-500">{error}</p>
+    <p>{error}</p>
 {:else}
 
     <div style="display: flex; gap: 2rem; align-items: flex-start;">
         <div style="min-width: 350px; max-width: 400px;">
-            <h3 class="text-lg font-semibold mb-2">Page preview</h3>
+            <h3>Page preview</h3>
             {#if pageData?.page_url}
                 <img
                     class = "preview-image"
@@ -76,11 +87,11 @@
                     alt="Page screenshot"
                 />
             {:else}
-                <div class="text-gray-400 italic">No URL to preview</div>
+                <div>No URL to preview</div>
             {/if}
         </div>
 
-        <form on:submit|preventDefault={updatePage} class="max-w-xl mx-auto mt-6 space-y-4" style="flex:1;">
+        <form on:submit|preventDefault={updatePage} style="flex:1;width: 600px;">
             <h1 >Edit monitored page</h1>
 
             <label>
@@ -109,9 +120,9 @@
                 </select>
             </label>
 
-            <div class="border-t pt-4 text-sm text-gray-600">
+            <div>
                 <p><strong>Last update:</strong> {pageData.last_update ? new Date(pageData.last_update).toLocaleString() : 'N/A'}</p>
-                <p><strong>Last check:</strong> {pageData.last_check ? new Date(pageData.last_check).toLocaleString() : 'N/A'}</p>
+                <p><strong>Last check:</strong>  {pageData.last_check ? new Date(pageData.last_check).toLocaleString() : 'N/A'}</p>
                 <p>
                     <strong>Current status:</strong>
                     <span
@@ -133,70 +144,30 @@
                 </p>
             </div>
 
-            <div class="flex gap-4 mt-4">
-                <button type="submit" class="btn bg-blue-600 text-white">Save</button>
-                <button type="button" class="btn bg-red-600 text-white" on:click={deletePage}>Delete</button>
+            <div class="button_container">
+                <button type="submit" class="large_button">💾 Save</button>
+                <button type="button" class="large_button" style="background-color:#ef4444;" on:click={deletePage}>🗑️ Delete</button>
+                <button type="button" class="large_button" style="background-color:#5cb705;" on:click={manualCheck}>⟲ Manual Check</button>        
             </div>
+
+            {#if message}
+                <p>{message}</p>
+            {/if}
+
         </form>
     </div>
     {/if}
 </section>
 
 <style>
-    section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
+    .large_button{
+        width: 32%;
+    }
 
     .preview-image {
         width: 100%;
         height: auto;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    form {
-        max-width: 600px;
-        width: 600px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: #f8f9fa;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    label {
-        display: block;
-        margin-top: 1rem;
-        font-weight: bold;
-    }
-
-     input {
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.3rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-    }
-
-    button {
-        margin-top: 1.5rem;
-        padding: 0.6rem 1.2rem;
-        background-color: #007acc;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    select {
-            width: 103%;
-            padding: 0.5rem;
-            margin-top: 0.3rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
     }
 </style>
