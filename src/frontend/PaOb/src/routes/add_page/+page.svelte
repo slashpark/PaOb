@@ -52,48 +52,12 @@
     }
 </script>
 
+<svelte:head>
+	<title>Add Page</title>
+	<meta name="description" content="PaOb" />
+</svelte:head>
+
 <style>
-    section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-    form {
-        max-width: 500px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: #f8f9fa;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-
-    label {
-        display: block;
-        margin-top: 1rem;
-        font-weight: bold;
-    }
-
-    input {
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.3rem;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-    }
-
-    button {
-        margin-top: 1.5rem;
-        padding: 0.6rem 1.2rem;
-        background-color: #007acc;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
     .message {
         margin-top: 1rem;
         color: green;
@@ -102,19 +66,6 @@
     .error {
         margin-top: 1rem;
         color: red;
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-
-    select {
-            width: 104%;
-            padding: 0.5rem;
-            margin-top: 0.3rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
     }
 </style>
 

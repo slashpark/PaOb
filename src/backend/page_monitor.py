@@ -52,7 +52,7 @@ class PageMonitorService:
             body = soup.body
             page_content = body.get_text(separator="\n", strip=True) if body else ""
             hashed_content = sha256(page_content.encode()).hexdigest()
-            page_id = self.db_manager.add_page_to_monitor(name, url, element, interval, hashed_content) #TODO: this should return the page_id in order to schedule the job
+            page_id = self.db_manager.add_page_to_monitor(name, url, element, interval, hashed_content)
 
             self.scheduler.add_job(
                 self.submit_check_to_pool,

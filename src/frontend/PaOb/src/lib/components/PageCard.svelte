@@ -4,7 +4,6 @@
   import { timeAgo } from './utils';
   export let page_id: number;
   export let title: string;
-  export let description: string;
   export let url: string = '';
   export let lastUpdate: string = 'N/A';
 
@@ -96,9 +95,6 @@
     text-align: center;
   }
 
-  .desc {
-    color: #555;
-  }
 
   img {
     width: 100%;
@@ -122,7 +118,6 @@
 
 <a class="card" href={`/page_info/${page_id}`} style="text-decoration: none; color: inherit; cursor: pointer;">
   <div class="title">{title}</div>
-  <div class="desc">{description}</div>
 
   {#if loading}
   <div style="display: flex; justify-content: center; align-items: center; min-height: 100px;">
