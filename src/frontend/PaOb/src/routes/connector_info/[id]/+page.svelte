@@ -37,6 +37,24 @@
             error = err.message;
         }
     }
+
+    async function sendTestNotification() {
+        try {
+            const res = await fetch('/api/notifiers/test_notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    connector_id: id
+                }),
+            });
+            if (!res.ok) throw new Error('Error sending test notification');
+            alert('Test notification sent successfully!');
+        } catch (err: any) {
+            error = err.message;
+        }
+    }
 </script>
 
 <svelte:head>
@@ -52,7 +70,7 @@
 {:else if connectorData}
     <div style="max-width: 600px; margin: auto;">
         <h1>Connector Info</h1>
-        <table style="width:100%;border-collapse:collapse;">
+        <table style="width:100%;border-collapse:collapse; border-radius:8px; overflow:hidden;">
             <tbody>
                 <tr>
                     <th style="text-align:left;">ID</th>
@@ -88,6 +106,9 @@
             </tbody>
         </table>
         <div style="margin-top:2rem;">
+            <button type="button" class="large_button" style="background-color:#22c55e;" on:click={sendTestNotification}>🧪 Send Test Notification</button>
+        </div>
+        <div>
             <button type="button" class="large_button" style="background-color:#ef4444;" on:click={deleteConnector}>🗑️ Delete Connector</button>
         </div>
     </div>

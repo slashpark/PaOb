@@ -18,7 +18,6 @@
         }
 
         try {
-            console.log('Submitting:', { connectorName, connectorType, connectorsParams });
             const res = await fetch('api/notifiers/add_connector', {
                 method: 'POST',
                 headers: {

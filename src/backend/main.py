@@ -27,6 +27,9 @@ class NotifierConnector(BaseModel):
     connector_status: str
     connector_params: dict
 
+class NotifierTest(BaseModel):
+    connector_id: str
+
 
 #-----------PAGES---------------
 @app.post("/pages/")
@@ -95,3 +98,10 @@ def get_connector_info(connector_id: str):
     if not connector_info:
         raise HTTPException(status_code=404, detail="Connector not found")
     return connector_info
+
+@app.post("/notifiers/test_notification")
+def test_notification(notifierTest: NotifierTest):
+    success = monitor_service.notifier.send_test_notification(notifierTest.connector_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to send test notification")
+    return {"message": "Test notification sent successfully"}

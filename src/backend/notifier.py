@@ -27,6 +27,24 @@ class Notifier:
             success = connector.send_message(message)
             if not success:
                 print(f"[Notifier] Failed to send message via {connector.__class__.__name__}")
+    
+    def send_test_notification(self, connector_id):
+        for connector in self.config.get('connectors', []):
+            if int(connector.get('id', -1)) == int(connector_id):
+                if connector['type'] == 'telegram':
+                    from NotifierConnectors.TelegramConnector import TelegramConnector
+                    try:
+                        telegram_connector = TelegramConnector(connector['params']['bot_token'], connector['params']['chat_id'])
+                        success = telegram_connector.send_message("This is a test message.")
+                        if success:
+                            print(f"[Notifier] Test message sent successfully via Telegram")
+                            return True
+                        else:
+                            print(f"[Notifier] Failed to send test message via Telegram")
+                            return False
+                    except Exception as e:
+                        print(f"[Notifier] Error initializing Telegram connector: {e}")
+                        return False
             
     
     def add_connector(self,connector_name, connector_type, status, params):
@@ -56,9 +74,9 @@ class Notifier:
             obfuscated_params = {}
             for key, value in connector.get('params', {}).items():
                 print(key)
-                if isinstance(value, str) and len(value) > 6:
-                    obfuscated = value[:3] + '*' * (len(value) - 6) + value[-3:]
-                else:connectors
+                if isinstance(value, str) and len(value) > 4:
+                    obfuscated = value[:2] + '*' * (len(value) - 4) + value[-2:]
+                else:
                     obfuscated = '*' * len(str(value))
                 obfuscated_params[key] = obfuscated
                 obfuscated_connector['params'] = obfuscated_params
@@ -89,8 +107,8 @@ class Notifier:
                 obfuscated_connector = connector.copy()
                 obfuscated_params = {}
                 for key, value in connector.get('params', {}).items():
-                    if isinstance(value, str) and len(value) > 6:
-                     obfuscated = value[:3] + '*' * (len(value) - 6) + value[-3:]
+                    if isinstance(value, str) and len(value) > 4:
+                        obfuscated = value[:2] + '*' * (len(value) - 4) + value[-2:]
                     else:
                         obfuscated = '*' * len(str(value))    
                     obfuscated_params[key] = obfuscated
