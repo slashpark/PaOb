@@ -204,3 +204,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+monitoring_service.db
+notifier_configuration.json

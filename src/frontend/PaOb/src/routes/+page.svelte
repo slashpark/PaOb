@@ -32,9 +32,10 @@
 <section>
 	<div class="section_header">
 		<h1>Monitored Pages</h1>
-		<a href="/add_page">
-			<button>+ Add new page</button>
+		<a href="/connectors">
+			<button>Connectors</button>
 		</a>
+		
 	</div>
 	{#if loading}
 		<p>Loading...</p>
@@ -54,6 +55,9 @@
 			{/each}
 		</div>
 	{/if}
+	<a href="/add_page">
+		<button>+ Add new page</button>
+	</a>
 
 </section>
 
