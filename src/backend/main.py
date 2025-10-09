@@ -21,6 +21,17 @@ class Page(BaseModel):
     element_to_monitor: str = None
     check_interval: int = 60
 
+class NotifierConnector(BaseModel):
+    connector_name: str
+    connector_type: str
+    connector_status: str
+    connector_params: dict
+
+class NotifierTest(BaseModel):
+    connector_id: str
+
+
+#-----------PAGES---------------
 @app.post("/pages/")
 def add_page(page: Page):
     monitor_service.add_page_to_monitor(page.page_name, page.page_url, page.check_interval, page.element_to_monitor)
@@ -55,3 +66,42 @@ def get_next_check(page_id: int):
     if not next_check_time:
         raise HTTPException(status_code=404, detail="Page not found or no job scheduled")
     return {"next_check": next_check_time.isoformat() if next_check_time else None}
+
+#-----------------NOTIFIER---------------
+
+@app.post("/notifiers/send_notification")
+def send_notification(message: str):
+    monitor_service.notifier.send_notification(message)
+    return {"message": "Notification sent successfully"}
+
+@app.get("/notifiers/connectors")
+def get_connectors():
+    return monitor_service.notifier.get_connectors()
+
+@app.post("/notifiers/add_connector")
+def add_connector(connector: NotifierConnector):
+    success = monitor_service.notifier.add_connector(connector.connector_name, connector.connector_type, connector.connector_status, connector.connector_params)
+    if not success:
+        raise HTTPException(status_code=400, detail="Connector already exists")
+    return {"message": "Connector added successfully"}
+
+@app.delete("/notifiers/connectors/{connector_id}")
+def remove_connector(connector_id: str):
+    success = monitor_service.notifier.remove_connector(connector_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Connector not found")
+    return {"message": "Connector removed successfully"}
+
+@app.get("/notifiers/connectors/{connector_id}")
+def get_connector_info(connector_id: str):
+    connector_info = monitor_service.notifier.get_connector_info_by_id(connector_id)
+    if not connector_info:
+        raise HTTPException(status_code=404, detail="Connector not found")
+    return connector_info
+
+@app.post("/notifiers/test_notification")
+def test_notification(notifierTest: NotifierTest):
+    success = monitor_service.notifier.send_test_notification(notifierTest.connector_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to send test notification")
+    return {"message": "Test notification sent successfully"}
