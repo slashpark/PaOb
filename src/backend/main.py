@@ -88,3 +88,10 @@ def remove_connector(connector_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Connector not found")
     return {"message": "Connector removed successfully"}
+
+@app.get("/notifiers/connectors/{connector_id}")
+def get_connector_info(connector_id: str):
+    connector_info = monitor_service.notifier.get_connector_info_by_id(connector_id)
+    if not connector_info:
+        raise HTTPException(status_code=404, detail="Connector not found")
+    return connector_info

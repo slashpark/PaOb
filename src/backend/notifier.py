@@ -58,7 +58,7 @@ class Notifier:
                 print(key)
                 if isinstance(value, str) and len(value) > 6:
                     obfuscated = value[:3] + '*' * (len(value) - 6) + value[-3:]
-                else:
+                else:connectors
                     obfuscated = '*' * len(str(value))
                 obfuscated_params[key] = obfuscated
                 obfuscated_connector['params'] = obfuscated_params
@@ -81,3 +81,19 @@ class Notifier:
         if not self.config['connectors']:
             return None
         return int(self.config['connectors'][-1].get('id', None))
+
+    def get_connector_info_by_id(self, connector_id):
+        connector_id_int = int(connector_id)
+        for connector in self.config.get('connectors', []):
+            if int(connector.get('id', -1)) == connector_id_int:
+                obfuscated_connector = connector.copy()
+                obfuscated_params = {}
+                for key, value in connector.get('params', {}).items():
+                    if isinstance(value, str) and len(value) > 6:
+                     obfuscated = value[:3] + '*' * (len(value) - 6) + value[-3:]
+                    else:
+                        obfuscated = '*' * len(str(value))    
+                    obfuscated_params[key] = obfuscated
+                obfuscated_connector['params'] = obfuscated_params
+                return obfuscated_connector
+        return None

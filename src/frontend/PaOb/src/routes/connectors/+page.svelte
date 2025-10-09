@@ -110,7 +110,7 @@
         {:else}
             <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
                 {#each connectors as connector}
-                    <a href={`/connector_info/${connector.name}`} class="connector-list-element" style="display: flex; align-items: center; gap: 0.75rem;">
+                    <a href={`/connector_info/${connector.id}`} class="connector-list-element" style="display: flex; align-items: center; gap: 0.75rem;">
                         {#if connector.type === 'telegram'}
                             <img src={telegramIcon} alt="Telegram" width="32" height="32" />
                         {:else if connector.type === 'discord'}
