@@ -82,9 +82,9 @@ def add_connector(connector: NotifierConnector):
         raise HTTPException(status_code=400, detail="Connector already exists")
     return {"message": "Connector added successfully"}
 
-@app.delete("/notifiers/connectors/{connector_name}")
-def remove_connector(connector_name: str):
-    success = monitor_service.notifier.remove_connector(connector_name)
+@app.delete("/notifiers/connectors/{connector_id}")
+def remove_connector(connector_id: str):
+    success = monitor_service.notifier.remove_connector(connector_id)
     if not success:
         raise HTTPException(status_code=404, detail="Connector not found")
     return {"message": "Connector removed successfully"}

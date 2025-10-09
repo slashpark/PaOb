@@ -15,7 +15,10 @@ class Notifier:
         for connector in self.config.get('connectors', []):
             if connector['type'] == 'telegram' and connector['status'] == 'enabled':
                 from NotifierConnectors.TelegramConnector import TelegramConnector
-                self.connectors.append(TelegramConnector(connector['params']['bot_token'], connector['params']['chat_id']))
+                try:
+                    self.connectors.append(TelegramConnector(connector['params']['bot_token'], connector['params']['chat_id']))
+                except:
+                    print(f"[Notifier] Error initializing Telegram connector")
             # TODO: Add discord connector
 
     def send_notification(self, message):
@@ -32,8 +35,9 @@ class Notifier:
             if connector['name'] == connector_name:
                 print(f"[Notifier] Connector {connector_name} already exists.")
                 return False
-            
+        last_id = self.get_last_id()
         new_connector = {
+            "id": last_id + 1 if last_id is not None else 1,
             "name": connector_name,
             "type": connector_type,
             "status": status,
@@ -61,8 +65,19 @@ class Notifier:
             connectors.append(obfuscated_connector)
         return connectors
 
-    def remove_connector(self, connector_name):
-        self.config['connectors'] = [c for c in self.config['connectors'] if c['name'] != connector_name]
+    def remove_connector(self, connector_id):
+        connector_id_int = int(connector_id)
+        initial_len = len(self.config['connectors'])
+        self.config['connectors'] = [c for c in self.config['connectors'] if int(c.get('id', -1)) != connector_id_int]
+        if len(self.config['connectors']) == initial_len:
+            print(f"[Notifier] Connector with id {connector_id} not found.")
+            return False
         with open('./notifier_configuration.json', 'w') as file:
             json.dump(self.config, file, indent=4)
-        print(f"[Notifier] Removed connector: {connector_name}")
+        print(f"[Notifier] Removed connector: {connector_id}")
+        return True
+
+    def get_last_id(self):
+        if not self.config['connectors']:
+            return None
+        return int(self.config['connectors'][-1].get('id', None))
