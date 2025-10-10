@@ -4,17 +4,17 @@
 - npm 6+
 
 # INSTALL DEPENDENCIES
-'''bash
+```bash
 pip install -r requirements.txt
 npm install
-'''
+```
 
 # RUN BACKEND
-'''bash
+```bash
 fastapi run main.py
-'''
+```
 
 # RUN FRONTEND
-'''bash
+```bash
 npm run dev
-'''
+```
