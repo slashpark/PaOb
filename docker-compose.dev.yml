@@ -1,0 +1,38 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./src/backend/Dockerfile
+    container_name: paob-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./src/backend:/app
+    networks:
+      - paob-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./src/frontend/PaOb
+      dockerfile: Dockerfile.dev
+    container_name: paob-frontend-dev
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://backend:8000
+    volumes:
+      - ./src/frontend/PaOb:/app
+      - /app/node_modules
+    networks:
+      - paob-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  paob-network:
+    driver: bridge
